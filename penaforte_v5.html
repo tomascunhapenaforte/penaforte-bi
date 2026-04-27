@@ -35,9 +35,16 @@ header{position:relative;z-index:10;display:flex;align-items:center;justify-cont
 /* FILTERS */
 #filter-bar{position:relative;z-index:9;background:rgba(19,29,46,0.9);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
 .filter-label{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
-.filter-select{background:var(--navy-card);border:1px solid var(--border);color:var(--text);font-family:'Roboto',sans-serif;font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;outline:none;min-width:130px;}
-.filter-select:focus{border-color:var(--orange);}
-.filter-select option{background:var(--navy-card);}
+.filter-wrap{position:relative;}
+.filter-btn{background:var(--navy-card);border:1px solid var(--border);color:var(--text);font-family:'Roboto',sans-serif;font-size:11px;padding:5px 28px 5px 10px;border-radius:6px;cursor:pointer;outline:none;min-width:140px;text-align:left;position:relative;white-space:nowrap;}
+.filter-btn::after{content:'▾';position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:10px;}
+.filter-btn.has-value{border-color:var(--orange);color:var(--orange);}
+.filter-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;background:#1e3048;border:1px solid var(--border);border-radius:8px;min-width:200px;max-height:260px;overflow-y:auto;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,0.4);}
+.filter-dropdown.open{display:block;}
+.filter-option{display:flex;align-items:center;gap:8px;padding:7px 12px;cursor:pointer;font-size:12px;color:var(--muted);transition:background .15s;}
+.filter-option:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.filter-option input[type=checkbox]{accent-color:var(--orange);width:13px;height:13px;cursor:pointer;}
+.filter-option.checked{color:var(--text);}
 .btn-clear{font-size:11px;font-weight:600;color:var(--muted);background:transparent;border:1px solid var(--border);padding:5px 12px;border-radius:6px;cursor:pointer;transition:all .2s;letter-spacing:0.04em;}
 .btn-clear:hover{color:var(--orange);border-color:var(--orange);}
 
@@ -145,27 +152,27 @@ footer{position:relative;z-index:1;text-align:center;padding:16px;font-size:11px
 <!-- FILTER BAR -->
 <div id="filter-bar">
   <span class="filter-label">Filtros:</span>
-  <select class="filter-select" id="f-fase" onchange="applyFilters()"><option value="">Fase (todas)</option></select>
-  <select class="filter-select" id="f-status" onchange="applyFilters()"><option value="">Status Levant. (todos)</option></select>
-  <select class="filter-select" id="f-trt" onchange="applyFilters()"><option value="">TRT (todos)</option></select>
-  <select class="filter-select" id="f-estado" onchange="applyFilters()"><option value="">Estado (todos)</option></select>
-  <select class="filter-select" id="f-execprov" onchange="applyFilters()"><option value="">Exec. Provisória (todos)</option></select>
-  <select class="filter-select" id="f-instancia" onchange="applyFilters()"><option value="">Instância (todas)</option></select>
+  <div class="filter-wrap"><button class="filter-btn" id="btn-fase" onclick="toggleDropdown('dd-fase')">Fase (todas)</button><div class="filter-dropdown" id="dd-fase"></div></div>
+  <div class="filter-wrap"><button class="filter-btn" id="btn-status" onclick="toggleDropdown('dd-status')">Status (todos)</button><div class="filter-dropdown" id="dd-status"></div></div>
+  <div class="filter-wrap"><button class="filter-btn" id="btn-trt" onclick="toggleDropdown('dd-trt')">TRT (todos)</button><div class="filter-dropdown" id="dd-trt"></div></div>
+  <div class="filter-wrap"><button class="filter-btn" id="btn-estado" onclick="toggleDropdown('dd-estado')">Estado (todos)</button><div class="filter-dropdown" id="dd-estado"></div></div>
+  <div class="filter-wrap"><button class="filter-btn" id="btn-execprov" onclick="toggleDropdown('dd-execprov')">Exec. Provisória (todos)</button><div class="filter-dropdown" id="dd-execprov"></div></div>
+  <div class="filter-wrap"><button class="filter-btn" id="btn-instancia" onclick="toggleDropdown('dd-instancia')">Instância (todas)</button><div class="filter-dropdown" id="dd-instancia"></div></div>
   <button class="btn-clear" onclick="clearFilters()">✕ Limpar</button>
 </div>
 
 <nav>
   <div class="tab active" onclick="showTab('resumo',this)">01 · Resumo Executivo</div>
   <div class="tab" onclick="showTab('quantitativos',this)">02 · Quantitativos</div>
-  <div class="tab" onclick="showTab('levantados',this)">03 · Casos Levantados</div>
-  <div class="tab" onclick="showTab('estimativas',this)">04 · Estimativas</div>
-  <div class="tab" onclick="showTab('acompanhamento',this)">05 · Acompanhamento</div>
+  <div class="tab" onclick="showTab('acompanhamento',this)">03 · Acompanhamento Processual</div>
+  <div class="tab" onclick="showTab('estimativas',this)">04 · Estimativa Levantamentos</div>
+  <div class="tab" onclick="showTab('levantados',this)">05 · Casos Levantados</div>
 </nav>
 
 <main>
   <!-- ── 01 RESUMO ── -->
   <section id="resumo" class="section active">
-    <div class="section-title">Resumo Executivo · Carteira Ativa</div>
+    <div class="section-title">Resumo Executivo · Carteira Geral</div>
     <div class="kpi-grid" id="kpi-resumo" style="grid-template-columns:repeat(6,1fr)"></div>
     <div class="chart-grid-3">
       <div class="chart-card">
@@ -262,7 +269,7 @@ footer{position:relative;z-index:1;text-align:center;padding:16px;font-size:11px
     </div>
     <div class="section-title">Detalhe por Processo</div>
     <div class="chart-card table-wrap">
-      <table class="data-table"><thead><tr><th>FC</th><th>Reclamante</th><th>Fase</th><th>Valor de Face</th><th>Spread</th><th>Projeção Recebimento</th><th>Meses Rest.</th><th>Status</th></tr></thead>
+      <table class="data-table"><thead><tr><th>FC</th><th>Reclamante</th><th>Fase</th><th>Valor de Face</th><th>Spread</th><th>Projeção Recebimento</th><th>Meses Rest.</th><th>Último Andamento</th><th>Status</th></tr></thead>
       <tbody id="tabelaEstimativas"></tbody></table>
     </div>
   </section>
@@ -423,54 +430,67 @@ function tryUrl(idx) {
 }
 
 // ── FILTERS ──
+const FILTER_DEFS = [
+  {dd:'dd-fase',   btn:'btn-fase',    field:'fase',     label:'Fase'},
+  {dd:'dd-status', btn:'btn-status',  field:'statusLev',label:'Status'},
+  {dd:'dd-trt',    btn:'btn-trt',     field:'trt',      label:'TRT'},
+  {dd:'dd-estado', btn:'btn-estado',  field:'estado',   label:'Estado'},
+  {dd:'dd-execprov',btn:'btn-execprov',field:'execProv',label:'Exec. Provisória'},
+  {dd:'dd-instancia',btn:'btn-instancia',field:'instancia',label:'Instância'},
+];
+const filterSelections = {fase:new Set(),statusLev:new Set(),trt:new Set(),estado:new Set(),execProv:new Set(),instancia:new Set()};
+
+function toggleDropdown(id) {
+  document.querySelectorAll('.filter-dropdown').forEach(d=>{if(d.id!==id)d.classList.remove('open');});
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.filter-wrap'))document.querySelectorAll('.filter-dropdown').forEach(d=>d.classList.remove('open'));
+});
+
 function populateFilters() {
-  const sel = (id,field) => {
-    const el=document.getElementById(id);
-    const first=el.options[0];
-    el.innerHTML='';
-    el.appendChild(first);
-    [...new Set(allData.map(r=>r[field]).filter(Boolean))].sort().forEach(v=>{
-      const o=document.createElement('option');o.value=v;o.textContent=v;el.appendChild(o);
-    });
-  };
-  sel('f-fase','fase');
-  sel('f-status','statusLev');
-  sel('f-trt','trt');
-  sel('f-estado','estado');
-  sel('f-execprov','execProv');
-  sel('f-instancia','instancia');
+  FILTER_DEFS.forEach(({dd,btn,field,label})=>{
+    const el=document.getElementById(dd);
+    const values=[...new Set(allData.map(r=>r[field]).filter(Boolean))].sort();
+    el.innerHTML=values.map(v=>`<label class="filter-option${filterSelections[field].has(v)?' checked':''}"><input type="checkbox" value="${v}"${filterSelections[field].has(v)?' checked':''} onchange="onFilterChange('${field}','${dd}','${btn}','${label}',this)"> ${v}</label>`).join('');
+  });
+}
+
+function onFilterChange(field,dd,btn,label,cb) {
+  if(cb.checked) filterSelections[field].add(cb.value);
+  else filterSelections[field].delete(cb.value);
+  updateFilterBtn(btn,label,filterSelections[field]);
+  applyFilters();
+}
+
+function updateFilterBtn(btnId,label,set) {
+  const btn=document.getElementById(btnId);
+  if(set.size===0){btn.textContent=label+' (todos)';btn.classList.remove('has-value');}
+  else{btn.textContent=set.size===1?[...set][0]:label+' ('+set.size+')';btn.classList.add('has-value');}
 }
 
 function applyFilters() {
-  const fase=document.getElementById('f-fase').value;
-  const status=document.getElementById('f-status').value;
-  const trt=document.getElementById('f-trt').value;
-  const estado=document.getElementById('f-estado').value;
-  const execprov=document.getElementById('f-execprov').value;
-  const instancia=document.getElementById('f-instancia').value;
   filteredData = allData.filter(r=>
-    (!fase||r.fase===fase)&&
-    (!status||r.statusLev===status)&&
-    (!trt||r.trt===trt)&&
-    (!estado||r.estado===estado)&&
-    (!execprov||r.execProv===execprov)&&
-    (!instancia||r.instancia===instancia)
+    (!filterSelections.fase.size||filterSelections.fase.has(r.fase))&&
+    (!filterSelections.statusLev.size||filterSelections.statusLev.has(r.statusLev))&&
+    (!filterSelections.trt.size||filterSelections.trt.has(r.trt))&&
+    (!filterSelections.estado.size||filterSelections.estado.has(r.estado))&&
+    (!filterSelections.execProv.size||filterSelections.execProv.has(r.execProv))&&
+    (!filterSelections.instancia.size||filterSelections.instancia.has(r.instancia))
   );
   buildAll();
 }
 
 function clearFilters() {
-  ['f-fase','f-status','f-trt','f-estado','f-execprov','f-instancia'].forEach(id=>{
-    document.getElementById(id).selectedIndex=0;
-  });
+  Object.keys(filterSelections).forEach(k=>filterSelections[k].clear());
+  FILTER_DEFS.forEach(({btn,label})=>{const b=document.getElementById(btn);b.textContent=label+' (todos)';b.classList.remove('has-value');});
+  populateFilters();
   applyFilters();
 }
 
 // ── BUILD ALL ──
 function buildAll() {
-  // Ativos = excluindo Arquivados
-  const ativos = filteredData.filter(r=>!r.fase.toLowerCase().includes('arquiv')&&!r.fase.toLowerCase().includes('encerr'));
-  buildResumo(ativos, filteredData);
+  buildResumo(filteredData, filteredData);
   buildQuantitativos(filteredData);
   buildLevantados(filteredData);
   buildEstimativas(filteredData);
@@ -488,7 +508,7 @@ function buildResumo(ativos, todos) {
   const spreadMedio=ativos.length?totalSpread/ativos.length:0;
 
   document.getElementById('kpi-resumo').innerHTML=
-    kpiCard('Processos Ativos',String(ativos.length),'excluindo arquivados',C.orange,'⚖')+
+    kpiCard('Total de Processos',String(ativos.length),'processos na carteira',C.orange,'⚖')+
     kpiCard('Exec. Provisória',String(execSim),pct(execSim,ativos.length)+' da carteira',C.teal,'📋')+
     kpiCard('Valor de Deploy',fmt(totalDeploy),'capital investido',C.green,'💰')+
     kpiCard('Valor de Face',fmt(totalFace),'valor de face atual',C.yellow,'📊')+
@@ -554,11 +574,12 @@ function buildQuantitativos(data) {
   const ch=count('calcHom'),chC=[C.green,C.red,C.muted];
   destroyChart('chartCalcHom');
   charts['chartCalcHom']=new Chart(document.getElementById('chartCalcHom'),{type:'doughnut',data:{labels:ch.map(([k])=>k||'N/A'),datasets:[{data:ch.map(([,v])=>v),backgroundColor:chC,borderWidth:0,hoverOffset:5}]},options:{cutout:'65%',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT}}}});
-  document.getElementById('legendCalcHom').innerHTML=ch.map(([l,v],i)=>`<div class="donut-legend-item"><div class="donut-legend-left"><div class="donut-legend-swatch" style="background:${chC[i]}"></div>${l||'N/A'}</div><div class="donut-legend-val">${v}</div></div>`).join('');
+  const chTotal=ch.reduce((a,[,v])=>a+v,0);
+  document.getElementById('legendCalcHom').innerHTML=ch.map(([l,v],i)=>`<div class="donut-legend-item"><div class="donut-legend-left"><div class="donut-legend-swatch" style="background:${chC[i]}"></div>${l||'N/A'}</div><div class="donut-legend-val">${v} <span style="color:var(--muted);font-weight:400;font-size:10px">(${chTotal?(v/chTotal*100).toFixed(0):0}%)</span></div></div>`).join('');
 
   const sf=count('subfase').slice(0,10);
   destroyChart('chartSubFase');
-  charts['chartSubFase']=new Chart(document.getElementById('chartSubFase'),{type:'bar',data:{labels:sf.map(([k])=>k.length>38?k.slice(0,38)+'…':k),datasets:[{label:'Processos',data:sf.map(([,v])=>v),backgroundColor:C.orange+'bb',borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:(ctx)=>`Qtd: ${ctx.raw}`}}},scales:{x:{grid:{color:C.grid},ticks:{color:C.muted}},y:{grid:{color:'transparent'},ticks:{color:C.text,font:{size:9}}}}}});
+  charts['chartSubFase']=new Chart(document.getElementById('chartSubFase'),{type:'bar',data:{labels:sf.map(([k])=>k.length>38?k.slice(0,38)+'…':k),datasets:[{label:'Processos',data:sf.map(([,v])=>v),backgroundColor:sf.map((_,i)=>COLORS[i%COLORS.length]+'cc'),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:(ctx)=>`Qtd: ${ctx.raw}`}}},scales:{x:{grid:{color:C.grid},ticks:{color:C.muted}},y:{grid:{color:'transparent'},ticks:{color:C.text,font:{size:9}}}}}});
 }
 
 // ═══════ 03 LEVANTADOS ═══════
@@ -608,9 +629,9 @@ function buildEstimativas(data) {
   const doTri=dentro.filter(r=>r.projecao&&r.projecao>=today&&r.projecao<=endTri);
 
   document.getElementById('kpi-estimativas').innerHTML=
-    kpiCard('Face Esperada (Mês)',fmt(doMes.reduce((a,r)=>a+r.face,0)),`${doMes.length} processos`,C.orange,'📅')+
+    kpiCard('Valores Totais (Mês)',fmt(doMes.reduce((a,r)=>a+r.face,0)),`${doMes.length} processos`,C.orange,'📅')+
     kpiCard('Spread Esperado (Mês)',fmt(doMes.reduce((a,r)=>a+r.spread,0)),'retorno do mês',C.teal,'💹')+
-    kpiCard('Face Esperada (Trimestre)',fmt(doTri.reduce((a,r)=>a+r.face,0)),`${doTri.length} processos`,C.blue,'📆')+
+    kpiCard('Valores Totais (Trimestre)',fmt(doTri.reduce((a,r)=>a+r.face,0)),`${doTri.length} processos`,C.blue,'📆')+
     kpiCard('Spread Esperado (Trim.)',fmt(doTri.reduce((a,r)=>a+r.spread,0)),'retorno do trimestre',C.green,'💰');
 
   // Projeção por mês
@@ -645,6 +666,7 @@ function buildEstimativas(data) {
     <td style="color:${C.orange}">${fmtK(r.spread)}</td>
     <td style="color:var(--muted)">${r.projecao?r.projecao.toLocaleDateString('pt-BR'):'—'}</td>
     <td>${r.mesesNum!==null?(r.mesesNum<0?'<span class="pill red">Passou</span>':r.mesesNum===0?'<span class="pill orange">Este mês</span>':`${r.mesesNum} meses`):'—'}</td>
+    <td style="font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default" title="${r.andamento||''}">${r.andamento?r.andamento.slice(0,40)+(r.andamento.length>40?'…':''):'—'}</td>
     <td><span class="pill ${pillClass(r.statusLev)}">${r.statusLev}</span></td>
   </tr>`).join('');
 }
@@ -669,7 +691,7 @@ function buildAcompanhamento(data) {
   const sf={};data.forEach(r=>{if(r.subfase)sf[r.subfase]=(sf[r.subfase]||0)+1;});
   const sfS=Object.entries(sf).sort((a,b)=>b[1]-a[1]).slice(0,10);
   destroyChart('chartAcompSubFase');
-  charts['chartAcompSubFase']=new Chart(document.getElementById('chartAcompSubFase'),{type:'bar',data:{labels:sfS.map(([k])=>k.length>36?k.slice(0,36)+'…':k),datasets:[{label:'Processos',data:sfS.map(([,v])=>v),backgroundColor:C.orange+'bb',borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT}},scales:{x:{grid:{color:C.grid},ticks:{color:C.muted}},y:{grid:{color:'transparent'},ticks:{color:C.text,font:{size:9}}}}}});
+  charts['chartAcompSubFase']=new Chart(document.getElementById('chartAcompSubFase'),{type:'bar',data:{labels:sfS.map(([k])=>k.length>36?k.slice(0,36)+'…':k),datasets:[{label:'Processos',data:sfS.map(([,v])=>v),backgroundColor:sfS.map((_,i)=>COLORS[i%COLORS.length]+'cc'),borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...TT}},scales:{x:{grid:{color:C.grid},ticks:{color:C.muted}},y:{grid:{color:'transparent'},ticks:{color:C.text,font:{size:9}}}}}});
 
   // Dias sem andamento faixas
   const faixasDias=[
@@ -703,7 +725,7 @@ function buildAcompanhamento(data) {
       <td style="color:${C.yellow}">${fmtK(r.face)}</td>
       <td style="color:${C.orange}">${fmtK(r.spread)}</td>
       <td>${prazoMeses!==null?(prazoMeses<0?'<span class="pill red">Passou</span>':prazoMeses===0?'<span class="pill orange">Este mês</span>':prazoMeses+' meses'):'—'}</td>
-      <td style="font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.andamento||'—'}</td>
+      <td style="font-size:11px;color:var(--muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:default" title="${r.andamento||''}">${r.andamento?r.andamento.slice(0,40)+(r.andamento.length>40?'…':''):'—'}</td>
       <td class="${diasCls}" style="font-weight:600">${dias!==null?dias+' dias':'—'}</td>
       <td><span class="pill ${pillClass(r.statusLev)}">${r.statusLev}</span></td>
     </tr>`;
