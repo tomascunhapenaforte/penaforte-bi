@@ -380,12 +380,28 @@ function tryUrl(idx) {
       document.getElementById('last-update').textContent = 'Atualizado: ' + new Date().toLocaleString('pt-BR');
 
       // Normalise
+      // Parse BR currency: "R$ 136.432,36" -> 136432.36
+      function parseBR(val) {
+        if (!val) return 0;
+        const s = String(val).replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.').trim();
+        return parseFloat(s) || 0;
+      }
+      // Parse BR date: "01/08/2025" -> Date
+      function parseDateBR(val) {
+        if (!val) return null;
+        const s = String(val).trim();
+        // DD/MM/YYYY
+        const m = s.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+        if (m) return new Date(`${m[3]}-${m[2]}-${m[1]}`);
+        return new Date(s);
+      }
+
       const data = normalizedRaw.map(r => {
-        const deploy = parseFloat(r['Valor de Deploy']) || 0;
-        const face   = parseFloat(r['Valor de Face Atualizado']) || 0;
-        const spread = parseFloat(r['Spread Atual']) || 0;
-        const levantado = parseFloat(r['Valores Levantados']) || 0;
-        const spreadLev = parseFloat(r['Spread Levantamento']) || 0;
+        const deploy = parseBR(r['Valor de Deploy']);
+        const face   = parseBR(r['Valor de Face Atualizado']);
+        const spread = parseBR(r['Spread Atual']);
+        const levantado = parseBR(r['Valores Levantados']);
+        const spreadLev = parseBR(r['Spread Levantamento']);
 
         let mesesNum = null;
         const mStr = (r['Meses Restantes'] || '').trim();
@@ -393,8 +409,8 @@ function tryUrl(idx) {
         else if (mStr === 'Faltam 0 meses') mesesNum = 0;
         else { const m = mStr.match(/(\d+)/); if (m) mesesNum = parseInt(m[1]); }
 
-        const dataCessao = new Date(r['Data da Cessão'] || r['Data da Cessao'] || '');
-        const estRec = new Date(r['Estimativa de Recebimento'] || '');
+        const dataCessao = parseDateBR(r['Data da Cessão'] || r['Data da Cessao'] || '');
+        const estRec = parseDateBR(r['Estimativa de Recebimento'] || '');
         let anos = NaN, tir = null, desagio = null;
         if (!isNaN(dataCessao) && !isNaN(estRec) && deploy > 0 && face > 0) {
           const dias = (estRec - dataCessao) / 86400000;
