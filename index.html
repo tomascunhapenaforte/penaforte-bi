@@ -365,16 +365,18 @@ function tryUrl(idx) {
       if (!results.data || results.data.length === 0) { showError(); return; }
 
       const raw = results.data;
-      // Normalize headers — remove BOM, trim spaces
+      // Normalize headers — remove BOM, trim, drop empty columns
+      const validKeys = Object.keys(raw[0] || {}).filter(k => k.replace(/[_\d,"\n]/g,'').trim() !== '' && k.trim() !== '');
       const normalizedRaw = raw.map(row => {
         const newRow = {};
-        Object.keys(row).forEach(k => {
+        validKeys.forEach(k => {
           const cleanKey = k.replace(/\uFEFF/g, '').trim();
           newRow[cleanKey] = typeof row[k] === 'string' ? row[k].trim() : row[k];
         });
         return newRow;
       });
-      console.log('Cabeçalhos recebidos:', Object.keys(normalizedRaw[0] || {}));
+      console.log('Cabeçalhos válidos:', Object.keys(normalizedRaw[0] || {}));
+      console.log('Total de linhas:', normalizedRaw.length);
       document.getElementById('last-update').textContent = 'Atualizado: ' + new Date().toLocaleString('pt-BR');
 
       // Normalise
