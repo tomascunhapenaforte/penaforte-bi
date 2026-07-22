@@ -114,6 +114,8 @@ main{position:relative;z-index:1;max-width:1500px;margin:0 auto;padding:28px 32p
 .data-table th.sortable{cursor:pointer;user-select:none;transition:color .15s;}
 .data-table th.sortable:hover{color:var(--orange);}
 .data-table th.sortable .sort-arrow{color:var(--orange);margin-left:3px;}
+.data-table tr.clickable-row{cursor:pointer;}
+.data-table tr.clickable-row:hover td{background:rgba(232,146,42,0.06)!important;}
 
 /* PILLS */
 .pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;}
@@ -376,6 +378,7 @@ function pillClass(s) {
   return 'muted';
 }
 function destroyChart(id) { if(charts[id]){charts[id].destroy();delete charts[id];} }
+function openProcesso(fc){ window.open('processo.html?fc='+encodeURIComponent(fc), '_blank'); }
 
 function showTab(id,el) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -683,7 +686,7 @@ function buildLevantados(data) {
     {label:'Spread Levant.',field:'spreadLev'},{label:'Data Levant.',field:'dataLev'},{label:'Status',field:'statusLev'},
   ]);
   const levSorted = getSorted(lev,'levantados',arr=>[...arr].sort((a,b)=>b.levantado-a.levantado));
-  document.getElementById('tabelaLevantados').innerHTML=levSorted.map(r=>`<tr>
+  document.getElementById('tabelaLevantados').innerHTML=levSorted.map(r=>`<tr class="clickable-row" onclick="openProcesso('${r.fc}')">
     <td style="font-weight:700">${r.fc}</td>
     <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reclamante}</td>
     <td style="color:var(--muted);font-size:11px">${r.fase}</td>
@@ -743,7 +746,7 @@ function buildEstimativas(data) {
     return a.projecao-b.projecao;
   }));
 
-  document.getElementById('tabelaEstimativas').innerHTML=sorted.map(r=>`<tr>
+  document.getElementById('tabelaEstimativas').innerHTML=sorted.map(r=>`<tr class="clickable-row" onclick="openProcesso('${r.fc}')">
     <td style="font-weight:700">${r.fc}</td>
     <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reclamante}</td>
     <td style="color:var(--muted);font-size:11px">${r.fase}</td>
@@ -808,7 +811,7 @@ function buildAcompanhamento(data) {
     const dias=daysDiff(r.dataUltAnd);
     const diasCls=dias===null?'':dias>60?'old-date':dias>30?'mid-date':'';
     const prazoMeses=r.mesesNum!==null?r.mesesNum:null;
-    return `<tr>
+    return `<tr class="clickable-row" onclick="openProcesso('${r.fc}')">
       <td style="font-weight:700">${r.fc}</td>
       <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.reclamante}</td>
       <td style="color:var(--muted);font-size:11px">${r.estado}</td>
