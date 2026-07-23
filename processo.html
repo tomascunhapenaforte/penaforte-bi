@@ -37,6 +37,19 @@ main{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:28px 32p
 .hero{background:var(--navy-card);border:1px solid var(--border);border-radius:16px;padding:28px 32px;margin-bottom:22px;position:relative;overflow:hidden;}
 .hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--teal));}
 .hero-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:18px;}
+.hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:14px;}
+.risk-badge{display:flex;align-items:center;gap:12px;}
+.risk-badge .rb-text{text-align:right;}
+.risk-badge .rb-label{font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.risk-badge .rb-change{font-size:10px;margin-top:3px;color:var(--muted);}
+.risk-badge .rb-change.up{color:var(--green);}
+.risk-badge .rb-change.down{color:var(--red);}
+.risk-letter{font-size:26px;font-weight:900;width:50px;height:50px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid transparent;}
+.risk-letter.A{background:rgba(61,186,126,0.15);color:var(--green);border-color:var(--green);}
+.risk-letter.B{background:rgba(45,107,181,0.15);color:#5b9cdf;border-color:var(--blue);}
+.risk-letter.C{background:rgba(245,200,66,0.15);color:var(--yellow);border-color:var(--yellow);}
+.risk-letter.D{background:rgba(224,85,85,0.15);color:var(--red);border-color:var(--red);}
+.risk-letter.empty{background:rgba(255,255,255,0.04);color:var(--muted);border-color:var(--border);font-size:18px;}
 .hero-fc{font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);margin-bottom:6px;}
 .hero-processo{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-0.01em;}
 .hero-partes{font-size:14px;color:var(--muted);margin-top:6px;}
@@ -61,6 +74,15 @@ main{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:28px 32p
 /* SECTION CARDS */
 .section-title{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);margin-bottom:16px;display:flex;align-items:center;gap:10px;margin-top:26px;}
 .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(232,146,42,0.3),transparent);}
+
+.highlight-andamento{background:var(--navy-card);border:1px solid var(--border);border-left:4px solid var(--orange);border-radius:12px;padding:18px 22px;margin-bottom:22px;display:flex;gap:14px;align-items:flex-start;}
+.highlight-andamento .ha-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.highlight-andamento .ha-body{flex:1;min-width:0;}
+.highlight-andamento .ha-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;flex-wrap:wrap;}
+.highlight-andamento .ha-title{font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);}
+.highlight-andamento .ha-date{font-size:11px;color:var(--muted);font-weight:600;white-space:nowrap;}
+.highlight-andamento .ha-text{font-size:14px;color:var(--text);line-height:1.5;}
+.highlight-andamento .ha-text.ha-empty{color:var(--muted);font-style:italic;font-size:13px;}
 .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px;}
 .info-card{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:20px;}
 .info-card-title{font-size:10px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
@@ -92,7 +114,7 @@ main{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:28px 32p
 .class-opt{flex:1;text-align:center;padding:10px 6px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;font-size:14px;font-weight:800;color:var(--muted);transition:all .15s;}
 .class-opt:hover{border-color:rgba(255,255,255,0.2);}
 .class-opt.sel-A{background:rgba(61,186,126,0.15);border-color:var(--green);color:var(--green);}
-.class-opt.sel-B{background:rgba(33,150,168,0.15);border-color:var(--teal);color:var(--teal);}
+.class-opt.sel-B{background:rgba(45,107,181,0.15);border-color:var(--blue);color:#5b9cdf;}
 .class-opt.sel-C{background:rgba(245,200,66,0.15);border-color:var(--yellow);color:var(--yellow);}
 .class-opt.sel-D{background:rgba(224,85,85,0.15);border-color:var(--red);color:var(--red);}
 .class-locked{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(255,255,255,0.03);border:1.5px solid var(--border);}
@@ -153,9 +175,24 @@ footer{position:relative;z-index:1;text-align:center;padding:18px;font-size:11px
         <div class="hero-processo" id="hero-processo">—</div>
         <div class="hero-partes" id="hero-partes">—</div>
       </div>
-      <div class="hero-badges" id="hero-badges"></div>
+      <div class="hero-right">
+        <div class="risk-badge" id="risk-badge"></div>
+        <div class="hero-badges" id="hero-badges"></div>
+      </div>
     </div>
     <div class="info-grid" id="hero-info"></div>
+  </div>
+
+  <!-- ANDAMENTO IMPORTANTE (destaque) -->
+  <div class="highlight-andamento" id="highlight-andamento">
+    <div class="ha-icon">📌</div>
+    <div class="ha-body">
+      <div class="ha-header">
+        <span class="ha-title">Último Andamento Importante</span>
+        <span class="ha-date" id="ha-date">—</span>
+      </div>
+      <div class="ha-text" id="ha-text">—</div>
+    </div>
   </div>
 
   <!-- INFO CARDS -->
@@ -298,7 +335,7 @@ let processo = null;
 let classInicial = '';
 let classAtual = '';
 let inicialLocked = false;
-const CLASS_COLOR = {A:'green',B:'teal',C:'yellow',D:'red'};
+const CLASS_COLOR = {A:'green',B:'blue',C:'yellow',D:'red'};
 const params = new URLSearchParams(window.location.search);
 const fcParam = params.get('fc');
 
@@ -323,6 +360,7 @@ async function loadAll() {
 
     processo = buildProcesso(row);
     renderHero(processo);
+    renderAndamentoImportante(processo);
     renderCards(processo);
     renderAndamentos(andamentos, processo);
     renderTarefas(tarefas, processo);
@@ -369,6 +407,8 @@ function buildProcesso(r) {
     estRec:parseDateBR(r['Estimativa de Recebimento']),
     projecao:parseDateBR(r['Projeção de Recebimento']),
     dataLev:parseDateBR(r['Data Levantamento']),
+    dataUltAnd:parseDateBR(r['Data do último andamento']),
+    andamentoImportante:(r['Andamento']||'').trim(),
     mesesNum:parseMeses(r['Meses Restantes']),
     deploy,face,spread,levantado,
     cnjSet:[normCNJ(r['Nº do Processo']),normCNJ(r['Nº Execução Provisória'])].filter(Boolean),
@@ -397,6 +437,27 @@ function renderHero(p) {
   `;
 }
 
+function renderAndamentoImportante(p) {
+  const dateEl = document.getElementById('ha-date');
+  const textEl = document.getElementById('ha-text');
+  if(!p.andamentoImportante && !p.dataUltAnd) {
+    dateEl.textContent = '';
+    textEl.textContent = 'Nenhum andamento importante registrado na base.';
+    textEl.classList.add('ha-empty');
+    return;
+  }
+  textEl.classList.remove('ha-empty');
+  dateEl.textContent = p.dataUltAnd ? p.dataUltAnd.toLocaleDateString('pt-BR') : '';
+  textEl.textContent = p.andamentoImportante || '—';
+}
+
+function monthsBetween(from, to) {
+  if(!from || !to) return null;
+  let months = (to.getFullYear()-from.getFullYear())*12 + (to.getMonth()-from.getMonth());
+  if(to.getDate() < from.getDate()) months--;
+  return months;
+}
+
 function renderCards(p) {
   document.getElementById('card-localizacao').innerHTML = `
     <div class="info-item"><div class="info-label">TRT</div><div class="info-value">${p.trt||'—'}</div></div>
@@ -413,12 +474,22 @@ function renderCards(p) {
     <div class="info-item"><div class="info-label">Valores Levantados</div><div class="info-value" style="color:${C.green}">${fmt(p.levantado)}</div></div>
   `;
   const mesesLabel = p.mesesNum===null?'—':p.mesesNum<0?'Data já passou':p.mesesNum===0?'Este mês':`${p.mesesNum} meses`;
+
+  let antecipacaoHtml = '';
+  if(p.dataLev && p.estRec) {
+    const diff = monthsBetween(p.dataLev, p.estRec);
+    if(diff > 0) antecipacaoHtml = `<div class="info-item"><div class="info-label">Antecipação do Levantamento</div><div class="info-value" style="color:${C.green}">${diff} ${diff===1?'mês':'meses'} antes da estimativa</div></div>`;
+    else if(diff < 0) antecipacaoHtml = `<div class="info-item"><div class="info-label">Antecipação do Levantamento</div><div class="info-value" style="color:${C.orange}">${Math.abs(diff)} ${Math.abs(diff)===1?'mês':'meses'} após a estimativa</div></div>`;
+    else antecipacaoHtml = `<div class="info-item"><div class="info-label">Antecipação do Levantamento</div><div class="info-value">No mês da estimativa</div></div>`;
+  }
+
   document.getElementById('card-prazos').innerHTML = `
     <div class="info-item"><div class="info-label">Data da Cessão</div><div class="info-value">${fmtDate(p.dataCessao)}</div></div>
     <div class="info-item"><div class="info-label">Estimativa Recebimento</div><div class="info-value">${fmtDate(p.estRec)}</div></div>
     <div class="info-item"><div class="info-label">Projeção Recebimento</div><div class="info-value">${fmtDate(p.projecao)}</div></div>
     <div class="info-item"><div class="info-label">Meses Faltantes</div><div class="info-value accent">${mesesLabel}</div></div>
     <div class="info-item"><div class="info-label">Data Levantamento</div><div class="info-value">${fmtDate(p.dataLev)}</div></div>
+    ${antecipacaoHtml}
   `;
 }
 
@@ -505,6 +576,28 @@ function renderNotas(notas, p) {
   renderInicialField();
   renderAtualUI();
   renderComparacao();
+  renderRiskBadge();
+}
+
+function renderRiskBadge() {
+  const el = document.getElementById('risk-badge');
+  if(!classAtual) {
+    el.innerHTML = `<div class="risk-letter empty">—</div><div class="rb-text"><div class="rb-label">Classificação</div><div class="rb-change">Não avaliado</div></div>`;
+    return;
+  }
+  let changeHtml = `<div class="rb-change">Sem classificação inicial</div>`;
+  if(classInicial) {
+    if(classInicial === classAtual) {
+      changeHtml = `<div class="rb-change">Sem alteração</div>`;
+    } else {
+      const order = ['A','B','C','D'];
+      const melhorou = order.indexOf(classAtual) < order.indexOf(classInicial);
+      changeHtml = melhorou
+        ? `<div class="rb-change up">↑ Melhorou (${classInicial}→${classAtual})</div>`
+        : `<div class="rb-change down">↓ Piorou (${classInicial}→${classAtual})</div>`;
+    }
+  }
+  el.innerHTML = `<div class="risk-letter ${classAtual}">${classAtual}</div><div class="rb-text"><div class="rb-label">Classificação</div>${changeHtml}</div>`;
 }
 
 function renderInicialField() {
@@ -541,6 +634,7 @@ function selectClass(target, val) {
     updateClassOptUI('atual-select', classAtual);
   }
   renderComparacao();
+  renderRiskBadge();
 }
 
 function updateClassOptUI(containerId, current) {
